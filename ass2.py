@@ -7,25 +7,10 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.tri import Triangulation
 from scipy.sparse import csc_matrix
-
-import numpy as np
-from scipy.io import loadmat
-from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import spsolve, splu
 import time
 
-# Laplace.py code (make sure to have this in the same directory)
-def K(x, y):
-    """
-    Define the boundary condition function K(x, y).
-    """
-    outer_circ_rad = 1
-    if np.any(np.abs(np.sqrt(x**2 + y**2) - outer_circ_rad) < 1e-12):
-        # On the outer circle, Neumann BC.
-        return 0
-    else:
-        # On the inner circle, Robin BC.
-        return 1
+# Laplace.py code 
 
 
 class LaplDiscr:
@@ -182,16 +167,17 @@ def MassMat2D(p, t):
 
     return M
 
-
-
-# Define the boundary condition function K(x, y)
 def K(x, y):
+    """
+    Define the boundary condition function K(x, y).
+    """
     outer_circ_rad = 1
     if np.any(np.abs(np.sqrt(x**2 + y**2) - outer_circ_rad) < 1e-12):
+        # On the outer circle, Neumann BC.
         return 0
     else:
+        # On the inner circle, Robin BC.
         return 1
-
 # Load the mesh
 lapl = LaplDiscr("mesh.mat")
 
@@ -204,12 +190,12 @@ M, A, G = lapl.get_system(g)
 
 # Set the final time T and time step delta_t
 T = 1.0
-delta_t = 0.001  # Initial time step (you can adjust this)
+delta_t = 0.001  # Initial time step (adjustable)
 
 # Initialize v with zeros at t = 0
 v = lapl.get_initial()
 
-# Time stepping loop
+# Time stepping loop using (Euler Forward)
 for t in np.arange(0, T, delta_t):
     v = v + delta_t * (M.dot(v) - A.dot(v) + G(t))
 
@@ -226,3 +212,6 @@ lu_execution_time = time.time() - start_time
 
 print("Gaussian Elimination Execution Time: {:.6f} seconds".format(gaussian_execution_time))
 print("LU Decomposition Execution Time: {:.6f} seconds".format(lu_execution_time))
+
+print("Gauss-Seidel Solution:", solution_gaussian)
+print("solution_lu :", solution_lu )
