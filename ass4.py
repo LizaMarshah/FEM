@@ -27,8 +27,6 @@ def conjugate_gradient_solve(A, b, x0=None, tol=1e-6):
         x = x_new
         w = A @ p
         Anorm_p_squared = np.dot(p, w)
-        
-        # If norm_A(p) is 0, we should have converged.
         if Anorm_p_squared == 0:
             break
 
@@ -43,14 +41,7 @@ def conjugate_gradient_solve(A, b, x0=None, tol=1e-6):
 
     return x_new, n_iter
 
-# def gauss_seidel_setup(A):
-#     """Splits the matrix A and returns appropriate matrices"""
-#     n = A.shape[0]  # Get the size of the matrix A (n x n)
-#     L = triu(A, k=1)
-#     D = A - L
-#     L_plus_D_inv = np.linalg.inv(D)
-#     U = A - L
-#     return L_plus_D_inv, U
+
 
 def gauss_seidel_setup(A):
     """Splits the matrix A and returns appropriate matrices"""
