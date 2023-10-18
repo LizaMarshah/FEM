@@ -7,25 +7,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.tri import Triangulation
 from scipy.sparse import csc_matrix
-
-import numpy as np
-from scipy.io import loadmat
-from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import spsolve, splu
 import time
-
-# Laplace.py code (make sure to have this in the same directory)
-def K(x, y):
-    """
-    Define the boundary condition function K(x, y).
-    """
-    outer_circ_rad = 1
-    if np.any(np.abs(np.sqrt(x**2 + y**2) - outer_circ_rad) < 1e-12):
-        # On the outer circle, Neumann BC.
-        return 0
-    else:
-        # On the inner circle, Robin BC.
-        return 1
 
 
 class LaplDiscr:
@@ -182,14 +165,17 @@ def MassMat2D(p, t):
 
     return M
 
-
-
-# Define the boundary condition function K(x, y)
+# Laplace.py code (make sure to have this in the same directory)
 def K(x, y):
+    """
+    Define the boundary condition function K(x, y).
+    """
     outer_circ_rad = 1
     if np.any(np.abs(np.sqrt(x**2 + y**2) - outer_circ_rad) < 1e-12):
+        # On the outer circle, Neumann BC.
         return 0
     else:
+        # On the inner circle, Robin BC.
         return 1
 
 # Load the mesh
